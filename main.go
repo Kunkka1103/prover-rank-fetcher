@@ -27,10 +27,9 @@ type Prover struct {
 	NetworkSpeedPercentage       string      `json:"NetworkSpeedPercentage"`
 }
 
-func fetchProverRankList(startTime, endTime int64) ([]Prover, error) {
-	url := "http://localhost:8088/api/v1/provers/prover_rank_list"
+func fetchProverRankList(apiURL string, startTime, endTime int64) ([]Prover, error) {
 	payload := fmt.Sprintf(`{"start_time": %d, "end_time": %d}`, startTime, endTime)
-	req, err := http.NewRequest("POST", url, strings.NewReader(payload))
+	req, err := http.NewRequest("POST", apiURL, strings.NewReader(payload))
 	if err != nil {
 		return nil, err
 	}
@@ -121,11 +120,18 @@ func main() {
 				Usage:    "Path to the cluster-name file",
 				Required: true,
 			},
+			&cli.StringFlag{
+				Name:     "api_url",
+				Usage:    "API URL for fetching prover rank list",
+				Value:    "http://localhost:8088/api/v1/provers/prover_rank_list",
+				Required: false,
+			},
 		},
 		Action: func(c *cli.Context) error {
 			startDateTime := c.String("start_datetime")
 			endDateTime := c.String("end_datetime")
 			clusterFilePath := c.String("cluster_file")
+			apiURL := c.String("api_url")
 
 			startTime, err := parseDateTime(startDateTime)
 			if err != nil {
@@ -140,7 +146,7 @@ func main() {
 			fmt.Printf("Start timestamp: %d\n", startTime)
 			fmt.Printf("End timestamp: %d\n", endTime)
 
-			provers, err := fetchProverRankList(startTime, endTime)
+			provers, err := fetchProverRankList(apiURL, startTime, endTime)
 			if err != nil {
 				return fmt.Errorf("error fetching prover rank list: %v", err)
 			}
@@ -190,8 +196,8 @@ func main() {
 
 				row.AddCell().Value = prover.NetworkSpeedPercentage // 速率占比
 
-				row.AddCell().SetInt(int(networkSpeed / 3800)) // GPU数量/3080
-				row.AddCell().SetInt(int(networkSpeed / 9000)) // GPU数量/4090
+				row.AddCell().SetInt(int(networkSpeed / 15000)) // GPU数量/3080
+				row.AddCell().SetInt(int(networkSpeed / 43000)) // GPU数量/4090
 			}
 
 			today := time.Now().Format("2006-01-02")
