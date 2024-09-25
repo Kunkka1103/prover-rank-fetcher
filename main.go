@@ -167,7 +167,7 @@ func main() {
 			headerFont.Bold = true
 			headerStyle.Font = *headerFont
 
-			header := []string{"排名", "标记", "地址", "累计出块奖励(Puzzle Credits)", "占全网比例", "昨日奖励", "单日奖励占比", "节点速率(M s/s)", "速率占比", "GPU数量/3080", "GPU数量/4090"}
+			header := []string{"排名", "标记", "地址", "累计出块奖励(Puzzle Credits)", "占全网比例", "昨日奖励", "单日奖励占比", "节点速率(M s/s)", "速率占比", "GPU数量/4090"}
 			row := sheet.AddRow()
 			for _, h := range header {
 				cell := row.AddCell()
@@ -196,8 +196,7 @@ func main() {
 
 				row.AddCell().Value = prover.NetworkSpeedPercentage // 速率占比
 
-				row.AddCell().SetInt(int(networkSpeed / 15000)) // GPU数量/3080
-				row.AddCell().SetInt(int(networkSpeed / 43000)) // GPU数量/4090
+				row.AddCell().SetInt(int(networkSpeed / 1400000)) // GPU数量/4090
 			}
 
 			today := time.Now().Format("2006-01-02")
